@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>混合时钟</title>
+		<script src="https://cdn.bootcss.com/vue/2.6.10/vue.common.dev.js"></script>
+		<style>
+			html {margin: 0;padding: 0; font-size: 12px;height:100%;} /*控制字体的大小*/
+			body{background-color: #000000;}
+			#app{
+				position: relative;
+			}
+			.s,.i,.h,.w,.d,.m,.y{
+				position: absolute;
+				top: 350px; /*控制圆心的位置*/
+				left: 500px; /*控制圆心的位置*/
+				transition:transform 1s;
+				color: #999999;
+			}
+			.xx,.y{ /*若为当前时间,则字体样式修改*/
+				color: #FF0000;
+				font-size: 10px;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		    <!-- 秒 -->
+			<div class="s" 
+			v-bind:class="{xx:60-v==s}"
+			v-for="(v,k) in 60"
+			v-bind:style="{transform:'translate('+xc(sr,v+s,60)+'px,'+yc(sr,v+s,60)+'px) rotate('+dg(v+s,60)+'deg)'}">{{zh(60-v,1)}}秒</div>
+			<!-- 分 -->
+			<div class="i" v-for="(v,k) in 60"
+			v-bind:class="{xx:60-v==i}"
+			v-bind:style="{transform:'translate('+xc(ir,v+i,60)+'px,'+yc(ir,v+i,60)+'px) rotate('+dg(v+i,60)+'deg)'}">{{zh(60-v,1)}}分</div>
+			<!-- 时 -->
+			<div class="h" v-for="(v,k) in 24"
+			v-bind:class="{xx:24-v==h}"
+			v-bind:style="{transform:'translate('+xc(hr,v+h,24)+'px,'+yc(hr,v+h,24)+'px) rotate('+dg(v+h,24)+'deg)'}">{{zh(24-v,1)}}时</div>
+			<!-- 星期几 -->
+			<div class="w" v-for="(v,k) in 7"
+			v-bind:class="{xx:7-v==w}"
+			v-bind:style="{transform:'translate('+xc(wr,v+w,7)+'px,'+yc(wr,v+w,7)+'px) rotate('+dg(v+w,7)+'deg)'}">星期{{wk[7-v]}}</div>
+			<!-- 日期 -->
+			<div class="d" v-for="(v,k) in 31"
+			v-bind:class="{xx:31-k==d}"
+			v-bind:style="{transform:'translate('+xc(dr,k+d,31)+'px,'+yc(dr,k+d,31)+'px) rotate('+dg(k+d,31)+'deg)'}">{{zh(31-k,1)}}日</div>
+			<!-- 月 -->
+			<div class="m" v-for="(v,k) in 12"
+			v-bind:class="{xx:12-k==m+1}"
+			v-bind:style="{transform:'translate('+xc(mr,k+m+1,12)+'px,'+yc(mr,k+m+1,12)+'px) rotate('+dg(k+m+1,12)+'deg)'}">{{zh(12-k,1)}}月</div>
+			<!-- 年 -->
+			<div class="y">
+				{{y}}年
+			</div>		
+		</div>
+		<script>
+		    // v-bind:class="{xx:60-v==s}" 表示
+			// v-for="(v,k) in 60" 
+			var mv=new Vue({
+				el:'#app',
+				data:{
+					PI:Math.PI,
+					s:0, // 秒
+					i:0, // 分钟
+					h:0, // 小时
+					d:0, // 日期
+					m:0, // 月
+					y:0, // 年
+					w:0, // 周几
+					sr:600 * 0.54, // 计算水平偏移量时,“秒”的基准
+					ir:500 * 0.54,
+					hr:400 * 0.54,
+					wr:300 * 0.54,
+					dr:200 * 0.54,
+					mr:100 * 0.54,
+					wk:['日','一','二','三','四','五','六']
+				},
+				created() {
+				    // 每一秒执行一次回调
+					setInterval(()=>{
+						var date=new Date()
+						this.y=date.getFullYear()
+						this.m=date.getMonth()
+						this.d=date.getDate()
+						this.w=date.getDay()
+						this.h=date.getHours()
+						this.i=date.getMinutes()
+						this.s=date.getSeconds()
+						Math.cos()
+						
+					},1000)
+				},
+				methods:{
+					xc(r,k,l){ // 水平偏移(第10个div,其文本为'一十秒',在第十秒时它出现在2/3Π的位置)(0度水平向右,方向顺时针)
+						return r*Math.cos(2*k*this.PI/l) 
+					},
+					yc(r,k,l){ // 竖直偏移
+						return r*Math.sin(2*k*this.PI/l) 
+					},
+					dg(k,l){ // 旋转度数
+						return k*360/l
+					},
+					zh(num,type){ // 汉字文本
+						switch(type){
+							case 1:
+								var t1=['零','一','二','三','四','五','六','七','八','九','十']
+								var sw=parseInt(num/10)
+								var gw=num%10
+								return (sw!=0?t1[sw]+'十':'')+(gw!=0?t1[gw]:(sw==0?t1[0]:''))
+								break
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

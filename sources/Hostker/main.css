@@ -1,0 +1,104 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-size: 100px;
+  color: #fff;
+  --stepPadding: .1rem;
+  --bgColor: #2f7ddb;
+  --borderColor: #fff;
+}
+#main {
+  min-width: 1200px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto; 
+}
+.button {
+  border-radius: .04rem;
+  border: .02rem solid var(--borderColor);
+  padding: .02rem;
+  transition: all .6s ease;
+}
+.button:hover {
+  color: var(--bgColor);
+  background: var(--borderColor);
+}
+
+.step {
+  width: 100%;
+  height: 100%;
+  padding: var(--stepPadding);
+  background: var(--bgColor);
+  overflow: hidden;
+}
+.step .tilt {
+  width: calc(100% - 2 * var(--stepPadding));
+  height: calc(100% - 2 * var(--stepPadding));
+  background: var(--bgColor);
+  transform-style: preserve-3d;
+  transform: perspective(500px);
+  display: flex;
+  flex-flow: wrap row;
+}
+
+.step-1 {
+  font-size: .3rem;
+}
+.step-1 > .tilt > header {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content: space-between;
+  align-items: center;
+  background: red;
+}
+.step-1 > .tilt > header > nav {
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: .25rem;
+  line-height: .3rem;
+}
+.step-1 > .tilt > header > nav > div{
+  margin-right: .2rem; 
+}
+.step-1 > .tilt .container {
+  height: 80%;
+  width: 100%;
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.step-1 > .tilt .table {
+  display: flex;
+  flex-flow: wrap row;
+}
+.step-1 > .tilt .table > h2 {
+  width: 100%;
+  --size: .6rem;
+  height: var(--size);
+  font-size: var(--size);
+  line-height: var(--size);  
+  margin: .2rem;
+}
+.step-1 > .tilt .table .right {
+  text-align: right;
+}
+.step-1 > .tilt .table .button {
+  margin-left: .4rem;
+  margin-top: .4rem;
+  font-size: .4rem;
+  padding: .15rem; 
+}
+.step-1 > .tilt .picture-1 {
+  background: url(./girl1.png) no-repeat;
+}
+.step-1 > .tilt .picture {
+  width: 50%;
+  height: 100%;
+  background-size: cover;
+}

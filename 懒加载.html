@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <mta charset="utf-8"/>
+  <title>懒加载</title>
+  <style>
+    html {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+    .img {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .img > img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>    
+</head>
+<body>
+  <div class="container">
+    <div class="img"><img class="lazyLoad" data-origin="./sources/懒加载/purple.png" src="./sources/懒加载/gold.png"/></div>
+    <div class="img"><img class="lazyLoad" data-origin="./sources/懒加载/yellowgreen.png" src="./sources/懒加载/gold.png"/></div>
+    <div class="img"><img class="lazyLoad" data-origin="./sources/懒加载/purple.png" src="./sources/懒加载/gold.png"/></div>
+    <div class="img"><img class="lazyLoad" data-origin="./sources/懒加载/yellowgreen.png" src="./sources/懒加载/gold.png"/></div>
+  </div>   
+  <script>
+    /**
+     * @class 懒加载
+     */
+    class LazyLoad {
+      constructor (className) {
+        this.imgList = Array.from(document.querySelectorAll(className))
+        this.canLoad()
+        this.bindEvent()
+      }
+      canLoad () {
+        let imgList = this.imgList
+        for (let len = imgList.length;len--;) { // 非常精简的for循环写法，len--会先判断是否大于0再减一(变成索引)
+          this.inViewport(imgList[len]) && this.setRealImg(imgList[len], len)
+        }
+      }
+      bindEvent () {
+        // window.addEventListener 一开始没有监听成功
+        // 一开始滚动的是container盒子的scroll事件，不是windows的scroll事件, 即出现了双滚动条
+        window.addEventListener("scroll", this.throttle(() => {
+          // 使用匿名函数保证下面的this.imgList与上面的this.throttle的this相同
+          this.imgList.length && this.canLoad()
+        }, 500))
+      }
+      /**
+       * @description 判断<img/>标签的top距离window顶部多少
+       * @param {object} el - <img/>节点 
+       * @return {boolean}
+       */
+      inViewport (el) {
+        let windowHight = window.innerHeight
+        let elementTop = el.getBoundingClientRect().top
+        return elementTop <= windowHight - 100 // " - 100"主要是便于看到图片的变化, 也可以去掉
+      }
+      /**
+       * @description 修改<img/> 的src属性值为data-origin属性值
+       */
+      setRealImg (el, index) {
+        el.setAttribute("src", el.getAttribute("data-origin"))
+        this.imgList.splice(index, 1) // 因为for循环是从数组末尾开始裁剪的，所以不怕裁剪后数组查无索引，非常巧妙
+      }
+      /**
+       * @description 节流
+       */
+      throttle (func, wait) {
+        let timer
+        return () => { 
+          if (timer) { 
+            return
+          }
+          timer = setTimeout(() => {
+            func()
+            timer = null
+          }, wait)
+        }
+      }
+    }
+    let lazyLoad = new LazyLoad(".lazyLoad")
+  </script> 
+</body>
+</html>

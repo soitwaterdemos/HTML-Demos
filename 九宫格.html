@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>九宫格动画</title>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      --color: #FFA600;
+      color: var(--color);
+      overflow: hidden;
+    }
+    #container {
+      width: 60%;
+      height: 75%;
+      min-width: 30rem;
+      margin: 0 auto;
+      display: flex;
+      flex-flow: wrap row;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #bottom {
+      width: 60%;
+      height: 20%;
+      min-width: 30rem;
+      margin: 0 auto;
+    }
+    #bottom > div {
+      height: 3rem;
+      font-size: 1rem;
+      text-align: center;
+      
+      line-height: 3rem;
+      margin-top: 1rem;
+      border-radius: 1rem;
+      border: .1rem solid var(--color);
+      box-sizing: border-box;
+    }
+    #bottom > div:hover {
+      background: var(--color);
+      color: #fff;
+    }
+    #container > div {
+      height: 30%;
+      width: 30%;
+      padding: 1%;
+      border-radius: 1rem;
+      background-color: var(--color);
+      background-clip: content-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div id="bottom">
+    <div class="button start">START</div>
+    <div class="button stop">STOP</div>
+  </div>
+  <script>
+    // 笔记
+    // margin 为什么 没有 BFC (垂直, 相邻)
+    // 布局还是不熟悉
+    // 为 setInterval 添加引用(如 action)不需要 let var
+    // 为什么不进入 setInterval 的回调 
+    // (应该是 querySelector() 其参数选择器不支持多个权重描述 逗号仅表示并集，之前一直是null.addEventLIstener)
+
+    let startBtn = document.querySelector(".start")
+    let stopBtn = document.querySelector(".stop")
+    let div = document.querySelectorAll("#container>div")
+    let colors=['red','plum','blue','green','cyan','black','pink','gray','brown']
+
+    startBtn.addEventListener("click", function (e) {
+      action = setInterval(function () {
+        refreshBackground(div)
+        let shink = getRandom(3, 9)
+        for (let s of shink) {
+          div[s.index].style.setProperty("background-color", s.color)
+        }
+      }, 1000)
+    })
+    stopBtn.addEventListener("click", function () {
+      clearInterval(action)
+    })
+
+    /**
+     * @description 任选number个div改变其背景颜色，max为div的总数，div即九宫格
+     * @param {number} number - 九宫格中每次挑选闪烁的个数
+     * @param {number} max - 九宫格的div的总数量
+     */
+    function getRandom (number, max) {
+      let indexArr = getRandomArr(number)
+      let colorArr = getRandomArr(number)
+      console.log(indexArr, colorArr)
+      let result = []
+      for (let i = 0;i < number;i++) {
+        result.push({
+          "index": indexArr[i],
+          "color": colors[colorArr[i]]
+        })
+      }
+      return result
+      
+      function getRandomArr (number) {
+        let arr = []
+        for (let i = 0;i < number;i++) {
+          let tempNum = getRandomNum(max)
+          if (arr.indexOf(tempNum) === -1) {
+            arr.push(tempNum)
+          } else {
+            i--
+          }
+        }
+        return arr
+      }
+
+      function getRandomNum (max) { // 获取随机数, 最大值为max
+        return Math.floor(Math.random() * max)
+      }
+    }
+
+    function refreshBackground (list) {
+        let len = list.length
+        for (let i = 0;i < len;i++) {
+          list[i].style.setProperty("background-color", "#FFA600")
+        }
+      }
+  </script>
+</body>
+</html>
